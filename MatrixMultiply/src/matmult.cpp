@@ -16,34 +16,49 @@ inline int least_significant_bit(int x) {
     return x & (-x);
 }
 
-void mult_blas(int N)
+// err = sum(sqr(Ai-Bi))
+double matrix_err(int N, int M, double *A, double *B)
 {
-    double *A, *B, *C;
+    double *pA = A, *pB=B;
+    const int L = M*N;
+    double r = 0;
+    for(int i=0; i<L; ++i, ++pA, ++pB) {
+        double x = *pA - (*pB);
+        r += x*x;
+    }
+    return r;
+}
+
+void mult_blas(int N, int L, int M, double *A, double*B, double *C)
+{
     TimePoint started, ended, timeTaken;
+
+    int i,j;
+    started = Now();
+
+    cblas_dgemm(CblasRowMajor, CblasNoTrans, CblasTrans, N, N, N, 1,A, N, B, N, 0, C, N);
+
+    ended = Now();
+    printf("blas Time: %d ms\n", ToMilli(ended-started));
+}
+
+int main(int argc, char *argv[])
+{
+    void mult(int N, int M, double *A, double*B, double *C);
+    void mult_trans(int N, int M, double *A, double*B, double *C);
+
+    double *A, *B, *C;
+    const int N = 1024, M=1024;
 
     A = (double*) calloc(N*N, sizeof(double));
     B = (double*) calloc(N*N, sizeof(double));
     C = (double*) calloc(N*N, sizeof(double));
 
-    int i,j;
-    started = Now();
+    mult_blas(N, A, B, C);
+    mult(N, A, B, C);
+    mult_trans(N, A, B, C);
 
-    cblas_dgemm(CblasColMajor, CblasTrans, CblasTrans, N, N, N, 1,B, N, C, N, 0, A, N);
-
-    ended = Now();
-    printf("blas Time: %d ms\n", ToMilli(ended-started));
     free(A);
     free(B);
     free(C);
-}
-
-int main(int argc, char *argv[])
-{
-    void mult(int N);
-    void mult_trans(int N);
-
-    const int N = 1024;
-    mult_blas(N);
-    mult(N);
-    mult_trans(N);
 }
