@@ -7,9 +7,8 @@
 #define IND(A, x, y, d) A[(x)*(d)+(y)]
 
 // C = A * B
-void mult(int N, double *A, double*B, double *C)
+void mult(int N, int L, int M, double *A, double*B, double *C)
 {
-    const int M = N, L=N;  // N x L and L x M Matices
     double *pA, *pB, *pC;
     TimePoint started, ended, timeTaken;
 
@@ -25,16 +24,12 @@ void mult(int N, double *A, double*B, double *C)
     printf("mult Time: %d ms\n", ToMilli(ended-started));
 }
 
-void mult_trans(int N, double *A, double*B, double *C)
+void mult_trans(int N, int L, int M, double *A, double*B, double *C)
 {
-    const int M = N, L=N;  // N x L and L x M Matices
     double *Bx;
     double *pA, *pB, *pC, *pBx;
     TimePoint started, ended, timeTaken;
 
-    pA = A = (double*) calloc(N*L, sizeof(double));
-    pB = B = (double*) calloc(L*M, sizeof(double));
-    pC = C = (double*) calloc(N*M, sizeof(double));
 
     pBx = Bx = (double*) calloc(L*M, sizeof(double));
 
@@ -65,16 +60,11 @@ void mult_trans(int N, double *A, double*B, double *C)
 static inline int min(int x, int y) {
     return y ^ ((x^y) & -(x<y));
 }
-void mult_blocked(int N, double *A, double*B, double *C)
+void mult_blocked(int N, int L, int M, double *A, double*B, double *C)
 {
-    const int M = N, L=N;  // N x L and L x M Matices
     double *Bx;
     double *pA, *pB, *pC, *pBx;
     TimePoint started, ended, timeTaken;
-
-    pA = A = (double*) calloc(N*L, sizeof(double));
-    pB = B = (double*) calloc(L*M, sizeof(double));
-    pC = C = (double*) calloc(N*M, sizeof(double));
 
     pBx = Bx = (double*) calloc(L*M, sizeof(double));
 

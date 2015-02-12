@@ -44,19 +44,19 @@ void mult_blas(int N, int L, int M, double *A, double*B, double *C)
 
 int main(int argc, char *argv[])
 {
-    void mult(int N, int M, double *A, double*B, double *C);
-    void mult_trans(int N, int M, double *A, double*B, double *C);
+    void mult(int N, int L, int M, double *A, double*B, double *C);
+    void mult_trans(int N, int L, int M, double *A, double*B, double *C);
 
     double *A, *B, *C;
-    const int N = 1024, M=1024;
+    const int N = 1024, L=1024, M=1024;
 
     A = (double*) calloc(N*N, sizeof(double));
     B = (double*) calloc(N*N, sizeof(double));
     C = (double*) calloc(N*N, sizeof(double));
 
-    mult_blas(N, A, B, C);
-    mult(N, A, B, C);
-    mult_trans(N, A, B, C);
+    mult_blas(N, L, M, A, B, C);
+    mult(N, L, M, A, B, C);
+    mult_trans(N, L, M, A, B, C);
 
     free(A);
     free(B);
