@@ -46,6 +46,7 @@ int main(int argc, char *argv[])
 {
     void mult(int N, int L, int M, double *A, double*B, double *C);
     void mult_trans(int N, int L, int M, double *A, double*B, double *C);
+    void mult_blocked(int N, int L, int M, double *A, double*B, double *C);
 
     double *A, *B, *C;
     const int N = 1024, L=1024, M=1024;
@@ -57,6 +58,7 @@ int main(int argc, char *argv[])
     mult_blas(N, L, M, A, B, C);
     mult(N, L, M, A, B, C);
     mult_trans(N, L, M, A, B, C);
+    mult_blocked(N, L, M, A, B, C);
 
     free(A);
     free(B);

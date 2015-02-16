@@ -82,28 +82,28 @@ void mult_blocked(int N, int L, int M, double *A, double*B, double *C)
     pB = B;
 
 //    const int x = N, y=M, z = L;
-    const int blockM = 256; // M is multiple of block_x
-    const int blockL = 256; // L is multiple of block_y
-    const int blockN = 256;
+    const int blockM = 256;
+    const int blockL = 256;
     for(int j=0; j<M; j+=blockM) {
         int jjEnd = min(j+blockM, M);
         for(int k=0; k<L; k+= blockL) {
-            pB = B + j*L + k;
-            pA = A;
             pC = C + j;
             int kkEnd = min(k+blockL, L);
-            for(int i=0; i<N; ++i, pA+=L, pC+=N) {
-                pC = C + i*M + j;
-                for(int jj=j; jj<jjEnd; ++jj, pC)
-                    for(int kk=k; kk<kkEnd; ++k)
-                        ;
+            for(int i=0; i<N; ++i, pA+=L, pC+=M) {
+                double *pC1 = pC;
+                for(int jj=j; jj<jjEnd; ++jj, ++pC1){
+                    pB = B + jj*L + k;
+                    pA = A + i*L + k;
+                    for(int kk=k; kk<kkEnd; ++kk, ++pB, ++pA)
+                        *pC1 += *pB *(*pA);
+                }// jj
             } // i
         } //k
     } // j
 
 
     ended = Now();
-    printf("mult_trans Time: %d ms\n", ToMilli(ended-started));
+    printf("mult_blocked Time: %d ms\n", ToMilli(ended-started));
     free(B);
 }
 
